@@ -132,24 +132,24 @@
 
     <script>
         // =================================================================
-        // FIX APPLIED: Supabase Credentials have been inserted here!
+        // Supabase Initialization
         // =================================================================
         const supabaseUrl = 'https://jxxnfsydjrflnephmfjm.supabase.co'; 
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4eG5mc3lkanJmbG5lcGhtZmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5OTU1MjEsImV4cCI6MjA4MTM1NTUyMX0.dlhnK99ki1KT24WGqTsW_8n7TnTIDH2mfLyxKB50Hl4'; 
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4eG5mc3lkanJmbG5lcGhtZmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5OTU1MjEsImV4cCI6MjA4MTM1NTUyMX0.dlhnK9[...]
         
         const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-supabase.auth.getSession().then(({ data, error }) => {
-  if (error) {
-    console.error("Supabase session error:", error.message);
-    const authMessage = document.getElementById('auth-message');
-    if (authMessage) {
-      authMessage.textContent = "Supabase initialization failed: " + error.message;
-      authMessage.classList.remove('hidden');
-      authMessage.classList.add('bg-red-800', 'text-white');
-    }
-  }
-});
+        supabase.auth.getSession().then(({ data, error }) => {
+          if (error) {
+            console.error("Supabase session error:", error.message);
+            const authMessage = document.getElementById('auth-message');
+            if (authMessage) {
+              authMessage.textContent = "Supabase initialization failed: " + error.message;
+              authMessage.classList.remove('hidden');
+              authMessage.classList.add('bg-red-800', 'text-white');
+            }
+          }
+        });
 
         
         // --- Configuration ---
@@ -374,52 +374,7 @@ supabase.auth.getSession().then(({ data, error }) => {
             signUpForm.addEventListener('submit', handleSignUp);
             toggleAuthButton.addEventListener('click', toggleView);
         });
-
     </script>
-
-<script>
-  console.log("🔧 Supabase Auth Debug: Script loaded");
-
-  document.addEventListener("DOMContentLoaded", async () => {
-    console.log("🔧 Supabase Auth Debug: DOM fully loaded");
-
-    const supabaseUrl = "https://jxxnfsydjrflnephmfjm.supabase.co";
-    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4eG5mc3lkanJmbG5lcGhtZmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk0NTA3NjUsImV4cCI6MjA3NTAyNjc2NX0.-IRbU1ER8lu7eNPoETgVQaFJ4Fp9VMowjzWfN7EZY6w";
-
-    console.log("🔧 Supabase Auth Debug: Creating Supabase client");
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
-    const signInForm = document.getElementById("sign-in-form");
-    if (!signInForm) {
-      console.warn(⚠️ Supabase Auth Debug: Sign-in form not found");
-      return;
-    }
-
-    signInForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      console.log("🔧 Supabase Auth Debug: Sign-in form submitted");
-
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-
-      console.log("🔧 Supabase Auth Debug: Attempting sign-in with email:", email);
-
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      });
-
-      if (error) {
-        console.error("❌ Supabase Auth Debug: Sign-in error", error);
-        alert("Sign-in failed: " + error.message);
-      } else {
-        console.log("✅ Supabase Auth Debug: Sign-in successful", data);
-        alert("Sign-in successful!");
-        window.location.href = "fixed_crooms_connect_redirect_final_fixed_updated_authenticated.html";
-      }
-    });
-  });
-</script>
 
 </body>
 </html>
