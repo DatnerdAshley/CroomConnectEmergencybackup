@@ -246,7 +246,7 @@ supabase.auth.getSession().then(({ data, error }) => {
                 
                 if (session) {
                     console.log("Active session found. Redirecting to main app.");
-                    sessionStorage.setItem('loggedIn', 'true'); window.location.href = 'c.html';
+                    sessionStorage.setItem('loggedIn', 'true'); window.location.href = 'connect.html';
                 }
             } catch(e) {
                 // Suppress errors during initial check if keys are bad, wait for user input
