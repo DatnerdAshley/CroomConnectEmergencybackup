@@ -1,69 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/umd/supabase.min.js"></script>
-<head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Crooms Connect - Login</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-
-<body>
-<div class="auth-card text-center">
-    <h1 class="text-3xl font-extrabold text-white mb-6">Crooms Connect</h1>
-    <p class="text-gray-400 mb-8">Sign in using your username and password.</p>
-
-    <div id="auth-message" class="mb-4 p-3 rounded-lg text-sm hidden"></div>
-
-    <form id="sign-in-form" class="space-y-4">
-        <input id="signin-username" required placeholder="Username" class="w-full">
-        <input id="signin-password" type="password" required placeholder="Password" class="w-full">
-        <button class="btn w-full">Sign In</button>
-    </form>
-
-    <form id="sign-up-form" class="space-y-4 hidden">
-        <input id="signup-username" required placeholder="Choose a Username" class="w-full">
-        <input id="signup-password" type="password" required placeholder="Password" class="w-full">
-        <button class="btn w-full">Sign Up</button>
-    </form>
-
-    <button id="toggle-auth-view" class="mt-6 text-sm text-gray-400">
-        Need an account? Sign Up
-    </button>
-</div>
-
 <script>
 /* ================= SUPABASE ================= */
 
 const supabaseClient = window.supabase.createClient(
   'https://jxxnfsydjrflnephmfjm.supabase.co',
-  'YOUR_PUBLIC_ANON_KEY'
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp4eG5mc3lkanJmbG5lcGhtZmptIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5OTU1MjEsImV4cCI6MjA4MTM1NTUyMX0.dlhnK99ki1KT24WGqTsW_8n7TnTIDH2mfLyxKB50Hl4'
 );
 
 const PLACEHOLDER_DOMAIN = '@croomsconnect.local';
 
-/* ================= AUTH STATE (FIX) ================= */
+/* ================= REDIRECT LOCK (CRITICAL) ================= */
 
-// Wait for Supabase to restore auth before redirecting
+let redirected = false;
+
+/* ================= AUTH STATE ================= */
+
 supabaseClient.auth.onAuthStateChange((event, session) => {
-  if (event === 'SIGNED_IN' && session) {
+  console.log('Auth event:', event);
+
+  if (event === 'SIGNED_IN' && session && !redirected) {
+    redirected = true; // 🔒 prevent loop
     window.location.replace('connect.html');
   }
 });
 
-/* ================= HANDLERS ================= */
+/* ================= SIGN IN ================= */
 
 document.getElementById('sign-in-form').addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  const email =
-    document.getElementById('signin-username').value.trim() +
-    PLACEHOLDER_DOMAIN;
-
+  const username = document.getElementById('signin-username').value.trim();
   const password = document.getElementById('signin-password').value;
 
   const { error } = await supabaseClient.auth.signInWithPassword({
-    email,
+    email: username + PLACEHOLDER_DOMAIN,
     password
   });
 
@@ -73,6 +42,8 @@ document.getElementById('sign-in-form').addEventListener('submit', async (e) => 
     msg.classList.remove('hidden');
   }
 });
+
+/* ================= SIGN UP ================= */
 
 document.getElementById('sign-up-form').addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -85,7 +56,10 @@ document.getElementById('sign-up-form').addEventListener('submit', async (e) => 
     password
   });
 
-  if (error) return alert(error.message);
+  if (error) {
+    alert(error.message);
+    return;
+  }
 
   await supabaseClient.from('profiles').insert({
     id: data.user.id,
@@ -95,5 +69,3 @@ document.getElementById('sign-up-form').addEventListener('submit', async (e) => 
   alert('Account created! Please sign in.');
 });
 </script>
-</body>
-</html>
